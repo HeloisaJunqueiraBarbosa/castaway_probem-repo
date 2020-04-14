@@ -6,7 +6,7 @@
 
 
 using namespace GEARSystem;
-
+//Calculate de angular distance 
 float angular_distance(const Position& human, const Position& shark) {
     float distance;
     
@@ -17,41 +17,40 @@ float angular_distance(const Position& human, const Position& shark) {
     return(distance);   
 }
 
+//Calculate the discrete gain
 void calcullatePID(const Position& human, const Position& shark, float angular_distance_lastError[3], float* last_aux){
     float aux;
     float dt, Kp, Kd, Td, T0, angular_distance_aux_U0, angular_distance_aux_Q0, angular_distance_aux_Q1, angular_distance_aux_Q2, angular_distance_past;
-    dt = 0.1;                               // time is 100ms
+    dt = 0.1;                               //interval time to execute a program is 100ms
     Kp = 0.3;                               //proporcional gain
-    Kd = 0.07;                               //derivative gain
-    //Ki = 0.00;                               //integral gain
+    Kd = 0.07;                              //derivative gain
+    //Ki = 0.00;                            //integral gain
     T0 = dt;                               
     Td = Kd/Kp;
     //Ti = Kp/Ki;
     angular_distance_aux_U0 = 1;
     angular_distance_aux_Q0 = Kp*(1+(Td/T0)); 
-    angular_distance_aux_Q1 = -Kp*(1+(2*(Td/T0)));   //-(T0/Ti));
+    angular_distance_aux_Q1 = -Kp*(1+(2*(Td/T0)));
     angular_distance_aux_Q2 = Kp*(Td/T0);
     
     Angle angleHuman(true, atan2(human.y(), human.x()));
     Angle angleShark(true, atan2(shark.y(), shark.x()));
     Angle distance(true, Angle::difference(angleHuman, angleShark));
-    float ang_dist = distance.value();
+    float ang_dist = distance.value();                  //angular distance
 
-    //discrete gain
+    
     angular_distance_lastError[2] = angular_distance_lastError[1];
     angular_distance_lastError[1] = angular_distance_lastError[0];
     angular_distance_lastError[0] = abs(ang_dist);
-    angular_distance_past = *last_aux;  //valor anterior medido
+    angular_distance_past = *last_aux;                  //last measure value
     
-    //u(k) = u(k - 1) + q 0 e(k) + q 1 e(k - 1) + q 2 e(k - 2)
+    //u(k) = u(k - 1) + q0 e(k) + q1 e(k - 1) + q2 e(k - 2)
     aux = angular_distance_aux_U0*angular_distance_past
         + angular_distance_aux_Q0*angular_distance_lastError[0]
         + angular_distance_aux_Q1*angular_distance_lastError[1]
         + angular_distance_aux_Q2*angular_distance_lastError[2];
 
     *last_aux = aux;
-    // Save error to previous error
-    //(*pre_error) = error;
 
 }
 
@@ -66,32 +65,28 @@ int main(int argc, char** argv) {
     float angular_distance_lastError[3]={0.0,0.0,0.0};
     float last_aux=0.0 , sharkLinearSpeedAnt = 0.0;
     
-    while (true) {
-        shark = c.playerPosition(0, 0);
-        human = c.playerPosition(1, 0);
+    while (true) {                                  //cycle: 100ms
+        shark = c.playerPosition(0, 0);             //get the shark position
+        human = c.playerPosition(1, 0);             //get the human position
         
         float v_s = 4.0, max = 4.0, min = 0.0;
         float sharkLinearSpeed = 0.0;
-        
 
-        // INSIRA AQUI SUA LOGICA DAQUI...
         float distance = angular_distance(human, shark);
-
-        //calcullatePID(dt, Kp, Kd, Ki, angleHuman, angleShark, integral, pre_error, output)
+        
+        //calculate de angular distance using a discrete PID
         calcullatePID( human, shark, angular_distance_lastError, &last_aux);
         
-        v_s = last_aux/0.1;  // w=delta_teta/delta_t
-        qWarning() << "Velocidade:" << v_s;
+        v_s = last_aux/0.1;          // w=delta_teta/t
 
-        // Restrict to max/min
+        // Restrict to max/min velocity
         if( v_s > max )
             v_s = max;
         else if( v_s < min )
             v_s = min;
         
         sharkLinearSpeed = v_s;
-        if(distance == M_PI ) { //dar giro 180
-            
+        if(distance == M_PI ) {                         
             if(sharkLinearSpeedAnt >= 0){
                 sharkLinearSpeed = 4.0;
             }
@@ -99,16 +94,16 @@ int main(int argc, char** argv) {
                 sharkLinearSpeed = -4.0;
             }
         }
-        else if(distance == 0.0){ //&& distance >= -0.0225 ){ //ficar parado Tolerancia de 1,28 graus para mais ou para menos
+        else if(distance == 0.0){                       //if align with he human wait
             sharkLinearSpeed = 0.0;
         }
-        else if(((distance < 0) && (distance > -(M_PI))) || ((distance > (M_PI)))){//ta dando problema ele passa // sentido antihorario 
+        else if(((distance < 0) && (distance > -(M_PI))) || ((distance > (M_PI)))){                 // run clockwise
             sharkLinearSpeed = v_s;
         }
-        else if(((distance > 0) && (distance < (M_PI))) || ((distance < -(M_PI)))){ // sentido horario
+        else if(((distance > 0) && (distance < (M_PI))) || ((distance < -(M_PI)))){                 // run counterclockwise
             sharkLinearSpeed = -v_s;
         }
-        // ...ATE AQUI
+
         sharkLinearSpeedAnt = sharkLinearSpeed;
         c.setSpeed(0, 0, sharkLinearSpeed, 0.0, 0.0);
 
@@ -117,15 +112,3 @@ int main(int argc, char** argv) {
 
     return app.exec();
 }
-
-//float error = distance.value();
-    // Proportional term 
-    //float Pout = Kp * error;
-    // Integral term
-    //(*integral) += error * dt;
-    //float Iout = Ki * (*integral);
-    // Derivative term
-    //float derivative = (error - (*pre_error)) / dt;
-    //float Dout = Kd * derivative;
-    // Calculate total output
-    //*output = Pout + Iout + Dout;
