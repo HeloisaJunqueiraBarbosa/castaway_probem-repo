@@ -10,19 +10,34 @@ sudo dnf install GEARSystem-devel WRTools qt5-devel omniORB-devel
 ```
 
 ## Usage
-After downloading it to local,
+After downloading it to local
+
      1. Compile the program using:
-         sh ./compile.sh
+	 
+        sh ./compile.sh
+		 
      2. Execute the program using 5 diferents terminals:
-         - First terminal run the command:
-        WRBackbone
-         - Second terminal cd to the folder of viewer/ and execute the command:
-        ./viewer
-         - Third treminal cd to the folder of world/ and execute the command:
-        ./world
-         - Second terminal cd to the folder of shark/ and execute the command:
-        ./shark
-         - Third treminal cd to the folder of human/ and execute the command:
-        ./human
+	 
+        - First terminal run the command:
+		 
+          WRBackbone
+		
+        - Second terminal cd to the folder of viewer/ and execute the command:
+		 
+          ./viewer
+		   
+        - Third treminal cd to the folder of world/ and execute the command:
+		 
+          ./world
+		   
+        - Second terminal cd to the folder of shark/ and execute the command:
+		 
+          ./shark
+		
+        - Third treminal cd to the folder of human/ and execute the command:
+		 
+          ./human
+		
      3. To stop the execution of the program press Ctrl+c in the viewer, world, shark and human terminal
+	 
     
