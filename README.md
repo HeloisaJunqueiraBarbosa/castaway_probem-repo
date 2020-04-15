@@ -12,7 +12,7 @@ sudo dnf install GEARSystem-devel WRTools qt5-devel omniORB-devel
 ## Usage
 After downloading it to local
 
-     1. Compile the program using:
+     1. Compile the program using
 	 
         sh ./compile.sh
 		 
