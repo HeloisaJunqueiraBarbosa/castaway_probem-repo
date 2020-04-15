@@ -12,11 +12,11 @@ sudo dnf install GEARSystem-devel WRTools qt5-devel omniORB-devel
 ## Usage
 After downloading it to local
 
-     1. Compile the program using
+1. Compile the program using
 	 
-        sh ./compile.sh
-		 
-     2. Execute the program using 5 diferents terminals:
+     	sh ./compile.sh
+	
+2. Execute the program using 5 diferents terminals:
 	 
         - First terminal run the command
 		 
@@ -38,6 +38,6 @@ After downloading it to local
 		 
           ./human
 		
-     3. To stop the execution of the program press Ctrl+c in the viewer, world, shark and human terminal
+3. To stop the execution of the program press Ctrl+c in the viewer, world, shark and human terminal
 	 
     
