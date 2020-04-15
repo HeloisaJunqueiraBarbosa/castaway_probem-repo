@@ -28,7 +28,7 @@ After downloading it to local
 		 
         ./viewer
 		   
-  - Third treminal cd to the folder of world/ and execute the command
+  - Third terminal cd to the folder of world/ and execute the command
 		 
         ./world
 		   
@@ -36,7 +36,7 @@ After downloading it to local
 		 
         ./shark
 		
-  - Fifth treminal cd to the folder of human/ and execute the command
+  - Fifth terminal cd to the folder of human/ and execute the command
 		 
         ./human
 		
