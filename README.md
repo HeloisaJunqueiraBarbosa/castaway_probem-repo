@@ -14,31 +14,31 @@ After downloading it to local
 
 1. Compile the program using
 	 
-     	sh ./compile.sh
+        sh ./compile.sh
 	
 2. Execute the program using 5 diferents terminals:
-	 
-        - First terminal run the commands
+
+  - First terminal run the commands
 		 
-          sudo systemctl start omniNames
+        sudo systemctl start omniNames
 		  
-		  WRBackbone
+		WRBackbone
 		
-        - Second terminal cd to the folder of viewer/ and execute the command
+  - Second terminal cd to the folder of viewer/ and execute the command
 		 
-          ./viewer
+        ./viewer
 		   
-        - Third treminal cd to the folder of world/ and execute the command
+  - Third treminal cd to the folder of world/ and execute the command
 		 
-          ./world
+        ./world
 		   
-        - Second terminal cd to the folder of shark/ and execute the command
+  - Fourth terminal cd to the folder of shark/ and execute the command
 		 
-          ./shark
+        ./shark
 		
-        - Third treminal cd to the folder of human/ and execute the command
+  - Fifth treminal cd to the folder of human/ and execute the command
 		 
-          ./human
+        ./human
 		
 3. To stop the execution of the program press Ctrl+c in the viewer, world, shark and human terminal
 
