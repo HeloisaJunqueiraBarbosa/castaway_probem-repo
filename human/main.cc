@@ -23,10 +23,15 @@ bool timeToBorder(const Position& human, const Position& shark){
     
     dist_border = 1-(sqrt(pow(human.x(),2)+pow(human.y(),2)));
     Angle angle = angular_distance(human,shark);
+	float ang_dist = angle.value();
+ 
+    if(ang_dist > M_PI){
+        ang_dist = 2*(M_PI) - ang_dist;
+    }
+	
     tempoHumano = dist_border/velocidade_humano;
-    tempoTubarao = angle.value()/velocidade_tubarao;
-    qWarning() << "tempoHumano:" << tempoHumano;
-    qWarning() << "tempoTubarao:" << tempoTubarao;
+    tempoTubarao = ang_dist/velocidade_tubarao;
+	
     if(tempoTubarao > tempoHumano){
         return true;
     }
@@ -65,7 +70,7 @@ Velocity goTo_with_PID(const Position& human, float pdestino, float angular_dist
     //Ti = Kp/Ki;
     angular_distance_aux_U0 = 1;
     angular_distance_aux_Q0 = Kp*(1+(Td/T0)); 
-    angular_distance_aux_Q1 = -Kp*(1+(2*(Td/T0))); //-(T0/Ti));
+    angular_distance_aux_Q1 = -Kp*(1+(2*(Td/T0))); 			//-(T0/Ti));
     angular_distance_aux_Q2 = Kp*(Td/T0);
     
     Angle angleHuman(true, atan2(human.y(), human.x()));
@@ -134,15 +139,15 @@ int main(int argc, char** argv) {
         dist= (sqrt(pow(human.x(),2)+pow(human.y(),2)));
         Angle angular_dist = angular_distance(human, shark);
 
-        if(timeToBorder(human, shark)==true){           //verify if castaway can run linearly to the border before the castaway reaches him
+        if(timeToBorder(human, shark)==true){           								 //verify if castaway can run linearly to the border before the castaway reaches him
             Velocity velocity_linear = goTo(human, pontoDestino(human.x(), human.y()));  //run linearly to reaches the border
             humanX = velocity_linear.x();            
             humanY = velocity_linear.y();
         }
-        else                                            //run around the center in a radius between 0.215<radius<0.225 (the smaller the radius the fewer turns he needs to give)
+        else                                            								//run around the center in a radius between 0.215<radius<0.225 (the smaller the radius the fewer turns he needs to give)
         { 
             if(align == true ){
-                if(dist < 0.250){                       // run in a circular trajectory with a fixed radius
+                if(dist < 0.250){                       								// run in a circular trajectory with a fixed radius
                     Velocity velocity_angular = moveAtRadius(human, radius);
                     humanX = velocity_angular.x();            
                     humanY = velocity_angular.y();
@@ -152,9 +157,9 @@ int main(int argc, char** argv) {
                     align = false;
                 }
             }
-            else{                                       //try reache the radius and waiting for the shark to align
+            else{                                       								//try reache the radius and waiting for the shark to align
                 if((dist < 0.225) && (dist > 0.215)){     
-                    if(((angular_dist.value() < 0.001) && (angular_dist.value() > -0.001))|| (angular_dist.value() > 6.282) || (angular_dist.value() < -6.282) ){          //parado esperando o tubarao
+                    if(((angular_dist.value() < 0.001) && (angular_dist.value() > -0.001))|| (angular_dist.value() > 6.282) || (angular_dist.value() < -6.282) ){
                         humanX = 0.0;
                         humanY = 0.0;
                         align = true;
