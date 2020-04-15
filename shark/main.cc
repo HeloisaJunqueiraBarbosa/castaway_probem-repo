@@ -22,8 +22,8 @@ void calcullatePID(const Position& human, const Position& shark, float angular_d
     float aux;
     float dt, Kp, Kd, Td, T0, angular_distance_aux_U0, angular_distance_aux_Q0, angular_distance_aux_Q1, angular_distance_aux_Q2, angular_distance_past;
     dt = 0.1;                               //interval time to execute a program is 100ms
-    Kp = 0.3;                               //proporcional gain
-    Kd = 0.07;                              //derivative gain
+    Kp = 4.5;                               //proporcional gain
+    Kd = 0.001;                              //derivative gain
     //Ki = 0.00;                            //integral gain
     T0 = dt;                               
     Td = Kd/Kp;
@@ -37,7 +37,10 @@ void calcullatePID(const Position& human, const Position& shark, float angular_d
     Angle angleShark(true, atan2(shark.y(), shark.x()));
     Angle distance(true, Angle::difference(angleHuman, angleShark));
     float ang_dist = distance.value();                  //angular distance
-
+	
+	if(abs(ang_dist) > M_PI){
+        ang_dist = 2*(M_PI) - abs(ang_dist);
+    }
     
     angular_distance_lastError[2] = angular_distance_lastError[1];
     angular_distance_lastError[1] = angular_distance_lastError[0];
@@ -77,7 +80,7 @@ int main(int argc, char** argv) {
         //calculate de angular distance using a discrete PID
         calcullatePID( human, shark, angular_distance_lastError, &last_aux);
         
-        v_s = last_aux/0.1;          // w=delta_teta/t
+        v_s = last_aux;
 
         // Restrict to max/min velocity
         if( v_s > max )
