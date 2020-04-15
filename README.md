@@ -18,9 +18,11 @@ After downloading it to local
 	
 2. Execute the program using 5 diferents terminals:
 	 
-        - First terminal run the command
+        - First terminal run the commands
 		 
-          WRBackbone
+          sudo systemctl start omniNames
+		  
+		  WRBackbone
 		
         - Second terminal cd to the folder of viewer/ and execute the command
 		 
