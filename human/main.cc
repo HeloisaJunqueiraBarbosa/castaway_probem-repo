@@ -17,9 +17,9 @@ Angle angular_distance(const Position& human, const Position& shark) {
 
 //compare the time to the castaway runs in a linear trajectory and the time that it takesto the to shark reach him
 bool timeToBorder(const Position& human, const Position& shark){
-    float dist_border, tempoHumano, tempoTubarao, velocidade_tubarao, velocidade_humano;
-    velocidade_humano = 1.0;
-    velocidade_tubarao = 4.0;
+    float dist_border, timeHuman, timeShark, velocity_shark, velocity_human;
+    velocity_human = 1.0;
+    velocity_shark = 4.0;
     
     dist_border = 1-(sqrt(pow(human.x(),2)+pow(human.y(),2)));
     Angle angle = angular_distance(human,shark);
@@ -29,10 +29,12 @@ bool timeToBorder(const Position& human, const Position& shark){
         ang_dist = 2*(M_PI) - ang_dist;
     }
 	
-    tempoHumano = dist_border/velocidade_humano;
-    tempoTubarao = ang_dist/velocidade_tubarao;
+    timeHuman = dist_border/velocity_human;
+    timeShark = ang_dist/velocity_shark;
+    qWarning() << "timeShark:" << timeShark;
+    qWarning() << "timeHuman:" << timeHuman;
 	
-    if(tempoTubarao > tempoHumano){
+    if(timeShark > timeHuman){
         return true;
     }
     else{
@@ -40,26 +42,19 @@ bool timeToBorder(const Position& human, const Position& shark){
     }
 }
 
-Position pontoDestino(float x,float y) {
-    
-    Angle angulo(true, atan2(y, x));
-    Position destino(true, cos(angulo.value()), sin(angulo.value()), 0.0);
-    return(destino);
-}
-
 // linear velocity
-Velocity goTo(const Position& human, const Position& destino) {
+Velocity goTo(const Position& human) {
     
-    Angle angulo(true, atan2(destino.y() - human.y(), destino.x() - human.x()));
+    Angle angle(true, atan2(human.y(), human.x()));
 
     float v_modulo = 1.0;
-    Velocity velocidade(true, v_modulo, angulo);
-    return(velocidade);
+    Velocity castawayVelocity(true, v_modulo, angle);
+    return(castawayVelocity);
 }
 
 // velocity to reach the radius to run in circle
 Velocity goTo_with_PID(const Position& human, float pdestino, float angular_distance_lastError[3], float* last_aux){
-    float aux, dist, dist_destino, distance;
+    float aux, dist, dist_destination, distance;
     float dt, Kp, Kd, Td, T0, angular_distance_aux_U0, angular_distance_aux_Q0, angular_distance_aux_Q1, angular_distance_aux_Q2, angular_distance_past;
     dt = 0.1;                                   // interval time to execute a program is 100ms
     Kp = 0.5;                                   //proportional gain
@@ -76,8 +71,8 @@ Velocity goTo_with_PID(const Position& human, float pdestino, float angular_dist
     Angle angleHuman(true, atan2(human.y(), human.x()));
     Position destino(true, (pdestino*cos(angleHuman.value())), (pdestino*sin(angleHuman.value())), 0.0);
     dist= sqrt(pow(human.x(),2)+pow(human.y(),2));
-    dist_destino = sqrt(pow(destino.x(),2)+pow(destino.y(),2));
-    distance = dist_destino - dist;
+    dist_destination = sqrt(pow(destino.x(),2)+pow(destino.y(),2));
+    distance = dist_destination - dist;
  
     //discrete gain
     angular_distance_lastError[2] = angular_distance_lastError[1];
@@ -93,12 +88,12 @@ Velocity goTo_with_PID(const Position& human, float pdestino, float angular_dist
 
     *last_aux = aux;
     //angular position of the castaway
-    Angle angulo(true, atan2(human.y(), human.x()));
+    Angle angle(true, atan2(human.y(), human.x()));
 
     // linear velocity    
     float v_modulo = aux/0.1;           //v_c = d/t
-    Velocity velocidade(true, v_modulo, angulo);
-    return(velocidade);
+    Velocity velocity(true, v_modulo, angle);
+    return(velocity);
 }
 
 // angular velocity
@@ -140,7 +135,7 @@ int main(int argc, char** argv) {
         Angle angular_dist = angular_distance(human, shark);
 
         if(timeToBorder(human, shark)==true){           								 //verify if the castaway can run linearly to the border before the shark reaches him
-            Velocity velocity_linear = goTo(human, pontoDestino(human.x(), human.y()));                                  //run linearly to reaches the border
+            Velocity velocity_linear = goTo(human);                                  //run linearly to reaches the border
             humanX = velocity_linear.x();            
             humanY = velocity_linear.y();
         }
