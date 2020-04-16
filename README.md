@@ -24,24 +24,26 @@ After downloading it to local
 		  
 		WRBackbone
 		
-  - Second terminal cd to the folder of viewer/ and execute the command
+  - Second terminal cd to the folder of viewer/ and execute the command. In the terminal will show the coordenates of castaway and shark.
 		 
         ./viewer
 		   
-  - Third terminal cd to the folder of world/ and execute the command
+  - Third terminal cd to the folder of world/ and execute the command. In the terminal will show who won. In the folder world/ the logs will be saved in data.csv
 		 
         ./world
 		   
-  - Fourth terminal cd to the folder of shark/ and execute the command
+  - Fourth terminal cd to the folder of shark/ and execute the command.
 		 
         ./shark
 		
-  - Fifth terminal cd to the folder of human/ and execute the command
+  - Fifth terminal cd to the folder of human/ and execute the command.In the terminal will be shown the time of the shark to swim to the castaway and the time of the castaway to run to the beach. 
 		 
         ./human
 		
 3. To stop the execution of the program press Ctrl+c in the viewer, world, shark and human terminal
 
 4. To see the results run the code plot_results.m in MATLAB and change the function fopen() with the file path in your computer to the folder world/
+
+5. To run again rename or delete the file data.csv in the folder world/ and then execute the commands in 2, 3, 4 and 5 again.
 	 
     
