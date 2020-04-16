@@ -42,6 +42,6 @@ After downloading it to local
 		
 3. To stop the execution of the program press Ctrl+c in the viewer, world, shark and human terminal
 
-4. To see the results run the code plot_results.m in MATLAB and change the function fopen() with the file path in your computer to the folder of world/
+4. To see the results run the code plot_results.m in MATLAB and change the function fopen() with the file path in your computer to the folder world/
 	 
     
