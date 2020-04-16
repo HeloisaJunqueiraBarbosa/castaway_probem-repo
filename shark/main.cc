@@ -18,13 +18,13 @@ float angular_distance(const Position& human, const Position& shark) {
 }
 
 //Calculate the discrete gain
-void calcullatePID(const Position& human, const Position& shark, float angular_distance_lastError[3], float* last_aux){
+void calculatePID(const Position& human, const Position& shark, float angular_distance_lastError[3], float* last_aux){
     float aux;
     float dt, Kp, Kd, Td, T0, angular_distance_aux_U0, angular_distance_aux_Q0, angular_distance_aux_Q1, angular_distance_aux_Q2, angular_distance_past;
-    dt = 0.1;                               //interval time to execute a program is 100ms
-    Kp = 4.5;                               //proporcional gain
+    dt = 0.1;                                //interval time to execute a program is 100ms
+    Kp = 4.5;                                //proportional gain
     Kd = 0.001;                              //derivative gain
-    //Ki = 0.00;                            //integral gain
+    //Ki = 0.00;                             //integral gain
     T0 = dt;                               
     Td = Kd/Kp;
     //Ti = Kp/Ki;
@@ -45,7 +45,7 @@ void calcullatePID(const Position& human, const Position& shark, float angular_d
     angular_distance_lastError[2] = angular_distance_lastError[1];
     angular_distance_lastError[1] = angular_distance_lastError[0];
     angular_distance_lastError[0] = abs(ang_dist);
-    angular_distance_past = *last_aux;                  //last measure value
+    angular_distance_past = *last_aux;                  //last measured value
     
     //u(k) = u(k - 1) + q0 e(k) + q1 e(k - 1) + q2 e(k - 2)
     aux = angular_distance_aux_U0*angular_distance_past
@@ -77,8 +77,8 @@ int main(int argc, char** argv) {
 
         float distance = angular_distance(human, shark);
         
-        //calculate de angular distance using a discrete PID
-        calcullatePID( human, shark, angular_distance_lastError, &last_aux);
+        //calculate velocity using a discrete PID
+        calculatePID( human, shark, angular_distance_lastError, &last_aux);
         
         v_s = last_aux;
 
@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
                 sharkLinearSpeed = -4.0;
             }
         }
-        else if(distance == 0.0){                       //if align with he human wait
+        else if(distance == 0.0){                       					   //if the shark align with he human, the shark will be wait
             sharkLinearSpeed = 0.0;
         }
         else if(((distance < 0) && (distance > -(M_PI))) || ((distance > (M_PI)))){                 // run clockwise
